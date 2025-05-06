@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>サーバーステータス</title>
+</head>
+<body>
+  <h1>起動状況</h1>
+  <div id="status">読み込み中...</div>
+
+  <script>
+    async function fetchStatus() {
+      try {
+        const res = await fetch('http://<your-bungee-ip>:8123/status');
+        const data = await res.json();
+        let html = '';
+        for (const [name, info] of Object.entries(data)) {
+          html += `<div>${name}: ${info.online ? '✅ 起動中' : '❌ 停止中'} (${info.players || 0}人)</div>`;
+        }
+        document.getElementById('status').innerHTML = html;
+      } catch (e) {
+        document.getElementById('status').innerText = 'サーバーに接続できませんでした';
+      }
+    }
+
+    setInterval(fetchStatus, 5000);
+    fetchStatus();
+  </script>
+</body>
+</html>
